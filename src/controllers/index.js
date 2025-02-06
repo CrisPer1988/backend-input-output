@@ -40,24 +40,30 @@ export const getCash = async (req, res) => {
       };
     }
 
-    // if (from) {
-    //   whereCondition.createdAt = {
-    //     [Op.gte]: `${from} 00:00:00`,
-    //     [Op.lt]: `${from} 23:59:59`,
-    //   };
-    // }
-
-    // if (to) {
-    //   whereCondition.createdAt = {
-    //     [Op.between]: [`${from} 00:00:00`, `${to} 23:59:59`],
-    //   };
-    // }
-
     const getCash = await Cash.findAll({ where: whereCondition });
 
     return res.status(200).json({ getCash });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error al obtener cash" });
+  }
+};
+
+export const deleteCash = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedCash = await Cash.destroy({
+      where: { id },
+    });
+
+    if (!deletedCash) {
+      return res.status(404).json({ message: "Cash no encontrado" });
+    }
+
+    return res.status(200).json({ message: "Cash eliminado correctamente" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error al eliminar cash" });
   }
 };
